@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 
+import 'common/stylus/index.styl'
 Vue.config.productionTip = false
 
 new Vue({
