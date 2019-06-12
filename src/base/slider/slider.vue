@@ -17,7 +17,6 @@
 <script>
 import BScroll from 'better-scroll'
 import { addClass } from 'common/js/dom'
-import { setTimeout, clearTimeout } from 'timers'
 export default {
   data () {
     return {
@@ -49,11 +48,20 @@ export default {
         this._play()
       }
     }, 20)
+
+    // 界面大小改变时，重新设置slider的大小
+    window.addEventListener('resize', () => {
+      if (!this.slider) {
+        return
+      }
+      this._setSliderWidth(true)
+      this.slider.refresh()
+    })
   },
 
   methods: {
     //   设置slider容器的宽度
-    _setSliderWidth () {
+    _setSliderWidth (isResize) {
       this.children = this.$refs.sliderGroup.children
       let width = 0
       let sliderWidth = this.$refs.slider.clientWidth
@@ -64,7 +72,7 @@ export default {
         width += sliderWidth
       }
 
-      if (this.loop) {
+      if (this.loop && !isResize) {
         width += 2 * sliderWidth
       }
       this.$refs.sliderGroup.style.width = width + 'px'
@@ -110,6 +118,9 @@ export default {
         this.slider.goToPage(pageIndex, 0, 400)
       }, this.interval)
     }
+  },
+  destroyed () {
+    clearTimeout(this.timer)
   }
 }
 </script>
